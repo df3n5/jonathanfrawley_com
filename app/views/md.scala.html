@@ -1,0 +1,6 @@
+@(f: =>Html)
+
+@Html(
+  org.commonmark.renderer.html.HtmlRenderer.builder().build().render(
+  org.commonmark.parser.Parser.builder().build().parse(f.toString))
+)

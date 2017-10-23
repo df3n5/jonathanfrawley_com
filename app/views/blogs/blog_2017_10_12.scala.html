@@ -1,0 +1,27 @@
+@md {
+# Scala Overmatching
+## When matching is a bad fit
+### 2017-10-12
+Pattern matching in Scala is a very powerful technique when used correctly. Today, I would like to talk about some particularly strange usages of it that I have come across recently. I will talk about a few different anti-patterns I have seen and how they can be avoided.
+
+## Why not getOrElse?
+The first kind is when someone uses a match expression when a `.getOrElse` would suffice. Here is an example snippet:
+
+
+    val DefaultName = "EMPTY"
+    ...
+    val maybeName: Option[String] = fetchName()
+    val name = maybeName match {
+      case Some(name) => name
+      case None => DefaultName
+    }
+
+As you can see, there are 4 lines of code to tell `name` to be `maybeName` if it is defined and a default value otherwise. This happens to be the exact semantics captured by the `.getOrElse` method of the `Option` type. With this in mind, we can improve our code:
+
+
+    val DefaultName = "EMPTY"
+    ...
+    val name: String = fetchName().getOrElse(DefaultName)
+
+This eliminates 4 lines of code and in my opinion is simpler for the reader to understand what is happening.
+}

@@ -9,6 +9,7 @@ scalaVersion := "2.12.3"
 
 libraryDependencies += guice
 libraryDependencies += "com.lihaoyi" %% "scalatags" % "0.6.7"
+libraryDependencies += "com.atlassian.commonmark" % "commonmark" % "0.10.0"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
 
 // Adds additional packages into Twirl
