@@ -4,7 +4,7 @@
 ### 2017-10-12
 Pattern matching in Scala is a very powerful technique when used correctly. Today, I would like to talk about some particularly strange usages of it that I have come across recently. I will talk about a few different anti-patterns I have seen and how they can be avoided.
 
-## Why not getOrElse?
+## Defaulting
 The first kind is when someone uses a match expression when a `.getOrElse` would suffice. Here is an example snippet:
 
 
@@ -24,4 +24,46 @@ As you can see, there are 4 lines of code to tell `name` to be `maybeName` if it
     val name: String = fetchName().getOrElse(DefaultName)
 
 This eliminates 4 lines of code and in my opinion is simpler for the reader to understand what is happening.
+
+## Boolean
+Match expressions are fantastic, but sometimes they are overkill. Let's look at the following example:
+
+    val isCached = ...
+    isCached match {
+      case true => "yes"
+      case false => "no"
+    }
+
+It is much more straightforward to just use an if statement:
+
+    val isCached = ...
+    if (isCached) "yes"
+    else "no"
+
+Usually this comes down to a judgement call. I think for booleans, however, if statements are better.
+
+## Matching too coarsely
+One aspect that makes match expressions powerful is that they allow the programmer to document what values or types are acceptable and which are not.
+Sometimes when programmers have a specific case that they want to catch, they leave the default case without a type:
+
+    val enumVal = ...
+    enumVal match {
+      case MyEnumType1() => ...
+      case _ => ...
+    }
+
+Sometimes this is what you want and sometimes it is not.
+I would wager that if you are using enums and scala, it would be valuable to get a compiler error when you add a new type to this enum. This allows you to check to see if there is a specific case you need to handle for this new type in the flow.
+If you use a match expression like the above, you are eliminating this advantage that Scala's type system is providing you.
+
+This is also an anti-pattern when handling errors as this will mean the error does not bubble up correctly.
+
+    val future = ...
+    future.recover {
+      case ExpectedException() =>
+        println("Oh no, my expected exception occurred!")
+    }
+
+If for example an exception you were not expecting like the `SpanishInquisitionException`, then it would not be handled by this recover and the failure would bubble up and hopefully get handled gracefully.
+If the programmer wishes to handle coarse errors then they can, but using a catch all means you will catch even fatal errors which should be handled only by the JVM. //TODO: CITATION NEEDED
 }
