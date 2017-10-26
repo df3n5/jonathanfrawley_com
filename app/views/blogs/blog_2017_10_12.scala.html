@@ -66,4 +66,6 @@ This is also an anti-pattern when handling errors as this will mean the error do
 
 If for example an exception you were not expecting like the `SpanishInquisitionException`, then it would not be handled by this recover and the failure would bubble up and hopefully get handled gracefully.
 If the programmer wishes to handle coarse errors then they can, but using a catch all means you will catch even fatal errors which should be handled only by the JVM. //TODO: CITATION NEEDED
+
+
 }
